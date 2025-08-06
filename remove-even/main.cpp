@@ -3,15 +3,17 @@
 
 using namespace std;
 
-void reverse(vector<int> &v, int a, int b)
+void remove_even(vector<int> &v, int a, int b)
 {
-    vector<int> newV(v.begin() + a, v.begin() + b + 1);
-    for (int i = 0; i < b - a + 1; i++)
+    if (b % 2 != 0)
     {
-        v[a + i] = newV[b - a - i];
+        b -= 1;
+    }
+    for (int i = b; i >= a; i -= 2)
+    {
+        v.erase(v.begin() + i);
     }
 }
-
 int main()
 {
     // read input
@@ -26,9 +28,11 @@ int main()
     }
     cin >> a >> b;
     // call function
-    reverse(v, a, b);
+    remove_even(v, a, b);
     // display content of the vector
     for (auto &x : v)
+    {
         cout << x << " ";
+    }
     cout << endl;
 }
