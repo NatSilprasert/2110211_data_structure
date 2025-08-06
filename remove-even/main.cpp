@@ -16,7 +16,6 @@ void remove_even(vector<int> &v, int a, int b)
 }
 int main()
 {
-    // read input
     int n, a, b;
     cin >> n;
     vector<int> v;
