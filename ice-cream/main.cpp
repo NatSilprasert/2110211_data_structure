@@ -8,51 +8,38 @@ int main() {
 
     int n, m, start;
     cin >> n >> m >> start;
-    map <int, int> d;
+    int prevVal = start;
+    int prevDay = 0;
+    int total = 0;
+    map <long long, pair<long long, int>> d;
     while (n--) {
         int input1, input2;
         cin >> input1 >> input2;
-        d[input1] = input2;
+
+        total += (input1 - prevDay) * prevVal;
+        d[total] = {input1 - 1, prevVal};
+
+        prevDay = input1;
+        prevVal = input2;
     }
 
+    d[999999] = {999999, prevVal};
+
     while (m--) {
-        int collect = start, 
-            money = start, 
-            prevDay = 0, 
-            maxVal = 0, 
-            price, scam;
+        int price, scam;
         cin >> price >> scam;
 
-        for (auto it = d.begin(); it != d.end(); ++it) {
-            maxVal += (it->first - prevDay) * money;
-            
-            int date = it->first - 1;
-            if (date > scam) {
-                maxVal = (date - scam) * money;
-            }
+        auto it = d.lower_bound(price);
+        int money = prev(it)->first;
 
-            if (price <= maxVal) {
-                while (price <= maxVal - money) {
-                    maxVal -= money;
-                    date--;
-                }
-                cout << date << " ";
-                break;
-            }
-            else if (it == prev(d.end())) {
-                while (price > maxVal) {
-                    if (date == scam) {maxVal = 0;}
-                    maxVal += it->second;
-                    date++;
-                }
-                cout << date << " ";
-            }
-            else {
-                money = it->second;
-                prevDay = it->first;
-            }
-            
+        if (scam <= it->second.first) {
+            int dayDiff = it->second.first - scam;
+            money = dayDiff * it->second.first;
         }
+
+        int date = (price - money) / it->second.second + prev(it)->second.first;
+        cout << endl;
+        cout << date << " ";
     }
 
     return 0;

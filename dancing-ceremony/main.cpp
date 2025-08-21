@@ -3,43 +3,37 @@
 #include <algorithm>
 using namespace std;
 
-int main() {
-    int n;
-    cin >> n;
-    int total = n * (n - 1) / 2;
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
 
-    vector<int> sum(n);
-    for (int i = 0; i < n; i++) {
-        int a;
-        cin >> a;
-        sum[i] = a;
+    int n;
+    long long ans = 0;
+    cin >> n;
+    vector<int> v(n);
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> v[i];
     }
-    for (int i = 0; i < n; i++) {
+
+    for (int i = 0; i < n; i++)
+    {
         int b;
         cin >> b;
-        sum[i] -= b;
+        v[i] -= b;
     }
-    
-    sort(sum.begin(), sum.end());
-    
-    // cout << endl;
-    // for (int num : sum) {
-    //     cout << "num : " << num << endl;
-    // }
 
-    for (auto st = sum.begin(); st < sum.end(); st++) {
-        int num = *st;
-        if (num >= 0) {
-            break;
-        }
-        int newNum = num * -1;
-        auto it = upper_bound(st, sum.end(), newNum);
-        it--;
-        total -= it - st;
-        // cout << "num : " << num << " diff : " << it - st << endl;
+    sort(v.begin(), v.end());
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        int j = upper_bound(v.begin() + i + 1, v.end(), -v[i]) - v.begin();
+        ans += n - j;
     }
-    
-    cout << total;
+
+    cout << ans << endl;
 
     return 0;
 }
