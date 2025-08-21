@@ -1,6 +1,5 @@
 #include <iostream>
 #include <map>
-#include <cmath>
 using namespace std;
 
 int main() {
@@ -26,11 +25,6 @@ int main() {
 
     d[999999] = {999999, prevVal};
 
-    cout << endl;
-    for (pair<long long, pair<long long, int>> x : d) {
-        cout << x.first << " " << x.second.first << " " << x.second.second << endl;
-    }
-
     while (m--) {
         int price, scam;
         cin >> price >> scam;
@@ -46,9 +40,9 @@ int main() {
             money = prev(it)->first;
         }
 
-        // int date = ceil((price - money) / it->second.second) + prev(it)->second.first;    
-
-        // cout << "day after : " << ceil((price - money) / it->second.second) << " date : " << date << endl;
+        int date = (price - money) / it->second.second + prev(it)->second.first;
+        cout << endl;
+        cout << date << " ";
     }
 
     return 0;
