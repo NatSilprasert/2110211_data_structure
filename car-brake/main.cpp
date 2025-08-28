@@ -28,6 +28,7 @@ int main() {
         speed.push_back(make_pair(p.first, currentSpeed));
         speedCount.push_back(make_pair(currentSpeed, p.first));
         prevSpeed -= p.second;
+        if (prevSpeed <= 0) break;
     }
 
     sort(speedCount.begin(), speedCount.end());
@@ -35,18 +36,14 @@ int main() {
     while (m--) {
         int op, input;
         cin >> op >> input;
-        auto upper = upper_bound(speed.begin(), speed.end(), make_pair(input, INT_MAX)); // input = time
-        auto upperCount = upper_bound(speedCount.begin(), speedCount.end(), make_pair(input, 0)); // input = speed
-        upperCount--;
-        upper--;
         if (op == 1) {
-            cout << upper->second << "\n";
+            auto it = prev(upper_bound(speed.begin(), speed.end(), make_pair(input, INT_MAX)));
+            cout << it->second << endl;
         }
-        else if (op == 2 && upperCount != speedCount.begin() - 1) {
-            cout << upperCount->second<< "\n";
-        }
-        else if (op == 2 && upperCount == speedCount.begin() - 1) {
-            cout << next(upperCount)->second<< "\n";
+        else {
+            auto it = lower_bound(speedCount.begin(), speedCount.end(), make_pair(input, -1));
+            if (it != speedCount.begin()) it = prev(it);
+            cout << it->second << endl;
         }
     }
     
