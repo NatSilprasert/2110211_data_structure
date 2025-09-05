@@ -1,6 +1,6 @@
 #include <iostream>
-#include <map>
-#include <cmath>
+#include <vector>
+#include <algorithm>
 using namespace std;
 
 int main() {
@@ -9,46 +9,48 @@ int main() {
 
     int n, m, start;
     cin >> n >> m >> start;
-    int prevVal = start;
-    int prevDay = 0;
-    int total = 0;
-    map <long long, pair<long long, int>> d = {{0, {0, 0}}};
+
+    vector<pair<int, int>> v;
+    vector<long long> money = {start};
+    long long prevAmount = start;
+    long long prevMoney = start;
+    long long prevDay = 1;
+ 
     while (n--) {
-        int input1, input2;
+        long long input1, input2;
         cin >> input1 >> input2;
-
-        total += (input1 - prevDay) * prevVal;
-        d[total] = {input1 - 1, prevVal};
-
-        prevDay = input1;
-        prevVal = input2;
+        v.push_back(make_pair(input1, input2));
     }
 
-    d[999999] = {999999, prevVal};
+    sort(v.begin(), v.end());
 
-    cout << endl;
-    for (pair<long long, pair<long long, int>> x : d) {
-        cout << x.first << " " << x.second.first << " " << x.second.second << endl;
+    for (auto [key, val] : v) {
+        long long count = key - prevDay;
+        while (count--) {
+            prevAmount += prevMoney;
+            money.push_back(prevAmount);
+        }
+        prevMoney = val;
+        prevDay = key;
+    }
+
+    while (money.size() <= 100000) {
+        prevAmount += prevMoney;
+        money.push_back(prevAmount);
     }
 
     while (m--) {
-        int price, scam;
+        long long price, scam;
         cin >> price >> scam;
-
-        auto it = d.lower_bound(price);
-        int money = prev(it)->first;
-
-        if (scam <= it->second.first) {
-            long long dayDiff = scam - prev(it)->second.first;
-            long long moneyLost = dayDiff * it->second.second + prev(it)->second.first;
-
-            it = d.lower_bound(price - moneyLost);
-            money = prev(it)->first;
+        auto it = lower_bound(money.begin(), money.end(), price);
+        long long day = it - money.begin();
+        if (day <= scam) {
+            cout << day << " ";
         }
-
-        // int date = ceil((price - money) / it->second.second) + prev(it)->second.first;    
-
-        // cout << "day after : " << ceil((price - money) / it->second.second) << " date : " << date << endl;
+        else {
+            auto newIt = lower_bound(it, money.end(), price + money[scam]);
+            cout << newIt - money.begin() << " ";
+        }
     }
 
     return 0;
