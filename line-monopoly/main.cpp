@@ -1,42 +1,55 @@
 #include <iostream>
 #include <set>
 #include <algorithm>
-#include <climits>
+#include <iterator>
 using namespace std;
 
-int main()
-{
+int main() {
     ios_base::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int n;
     cin >> n;
+    multiset<pair<int, int>> s;
 
-    set<pair<int, int>> range;
-
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         int op, start, end;
         cin >> op;
-        if (op == 1)
-        {
+        if (op == 1) {
             cin >> start >> end;
-            end++;
-            auto data = make_pair(start, end);
+            auto startIt = s.insert({start, 0});
+            auto endIt = s.insert({end, 1});
 
-            range.insert(data);
+            if (s.size() == 2) continue;
 
-            int left = start;
-            int right = start;
-            right++;
-
-            while (right != *prev(range.end())) {
-
+            if (startIt != s.begin() && prev(startIt)->second == 0)
+            {
+                startIt--;
             }
-        }
-        else
-        {
-            cout << range.size() << "\n";
+            else if (startIt != s.begin() && prev(startIt)->second == 1 &&
+                     (prev(startIt)->first + 1 == start || prev(startIt)->first == start))
+            {
+                startIt = prev(prev(startIt));
+            }
+
+            if (next(endIt) != s.end() && next(endIt)->second == 1)
+            {
+                endIt++;
+            }
+            else if (next(endIt) != s.end() && next(endIt)->second == 0 &&
+                     (next(endIt)->first - 1 == end || next(endIt)->first == end))
+            {
+                endIt = next(next(endIt));
+            }
+
+            int val = startIt->first;
+            s.erase(startIt, endIt);
+            s.insert({val, 0});
+            
+
+        }  
+        else {
+            cout << s.size() / 2 << "\n";
         }
     }
 }
