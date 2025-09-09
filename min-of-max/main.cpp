@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <set>
+#include <map>
 #include <algorithm>
 using namespace std;
 
@@ -9,19 +11,27 @@ int main() {
     
     int n, m;
     cin >> n >> m;
-    vector<int> maxPower(m, 1);
+    multiset<pair<int, int>> maxPower;
+    vector<int> typePower(m, 1);
     vector<int> powerList(n);
     for (int i = 0; i < n; i++) {
         cin >> powerList[i];
+    }
+
+    for (int i = 0; i < m; i++) {
+        maxPower.insert({1, i});
     }
 
     for (int i = 0; i < n; i++) {
         int type;
         cin >> type;
         int power = powerList[i];
-        if (maxPower[type] < power) maxPower[type] = power;
-
-        cout << *min_element(maxPower.begin(), maxPower.end()) << " ";
+        if (typePower[type] < power) {
+            maxPower.erase({typePower[type] ,type});
+            typePower[type] = power;
+            maxPower.insert({power ,type});
+        } 
+        cout << maxPower.begin()->first << " ";
     }
 
     return 0;
