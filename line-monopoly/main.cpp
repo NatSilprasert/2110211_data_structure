@@ -44,8 +44,7 @@ int main() {
 
             int val = startIt->first;
             s.erase(startIt, endIt);
-            s.insert({val, 0});
-            
+            s.insert({val, 0});     
 
         }  
         else {
