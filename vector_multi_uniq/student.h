@@ -1,32 +1,31 @@
 #ifndef __STUDENT_H_
 #define __STUDENT_H_
 
-#include <set>
+#include "vector.h"
+#include <unordered_set>
 #include <vector>
 #include <algorithm>
-#include "vector.h"
 
 template <typename T>
-void CP::vector<T>::uniq(std::vector<CP::vector<T>::iterator> itrs)
-{
-  std::set<T> seen;
-  std::set<T *> duplicates;
+void CP::vector<T>::uniq(std::vector<CP::vector<T>::iterator> itrs) {
+  std::unordered_set<int> seen;
+  std::vector<CP::vector<T>::iterator> del;
 
-  for (auto it : itrs) {
-    if (seen.count(*it)) {
-      duplicates.insert(&(*it));
+  std::sort(itrs.begin(), itrs.end());
+
+  for (int i = 0; i < itrs.size(); i++) {
+    if (!seen.count(*itrs[i])) {
+      seen.insert(*itrs[i]);
     }
     else {
-      seen.insert(*it);
+      del.push_back(itrs[i]);
     }
   }
 
-  CP::vector<T> tmp;
-  for (size_t i = 0; i < mSize; i++) {
-    if (!duplicates.count(&mData[i])) tmp.push_back(mData[i]);
+  for (int i = del.size() - 1; i >= 0; i--) {
+    erase(del[i]);
   }
 
-  *this = tmp;
 }
 
 #endif
